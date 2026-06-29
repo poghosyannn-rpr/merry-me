@@ -5,108 +5,135 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <title>Mery, will you marry me?</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+
+  <!-- ─────────────────────────────────────────────────────
+       EmailJS — sends email when Mery clicks Yes
+       Setup (5 min, free):
+         1. Go to https://www.emailjs.com/ → Sign Up (free)
+         2. Dashboard → Email Services → Add New Service → Gmail
+            Connect your Gmail → copy the Service ID  (e.g. service_xxxxxx)
+         3. Dashboard → Email Templates → Create New Template
+            Subject:  💍 She said YES!
+            Body:
+              Mery clicked YES at {{time}} on {{date}}.
+              Button clicks tracked: {{clicks}}
+            → Save → copy Template ID  (e.g. template_xxxxxx)
+         4. Dashboard → Account → API Keys → copy Public Key
+         5. Paste the three values below:
+  ──────────────────────────────────────────────────────── -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // ▼▼▼ PASTE YOUR VALUES HERE ▼▼▼
+    const EMAILJS_PUBLIC_KEY  = 'V4AcmfvgmYrV6Vp-i';
+    const EMAILJS_SERVICE_ID  = 'service_9b1onqa';
+    const EMAILJS_TEMPLATE_ID = 'template_au42no4';
+    const MY_EMAIL            = 'poghosyan.nn@gmail.com';
+    // ▲▲▲ ─────────────────────────
+
+    (function(){ emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); })();
+  </script>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background: #1a0a0a; }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { width:100%; height:100%; overflow:hidden; background:#1a0a0a; }
 
     #root {
-      width: 100vw; height: 100vh;
-      background: linear-gradient(135deg, #1a0a0a 0%, #2d0f1e 40%, #1a0a0a 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      font-family: 'Lato', sans-serif;
-      position: relative; overflow: hidden;
+      width:100vw; height:100vh;
+      background:linear-gradient(135deg,#1a0a0a 0%,#2d0f1e 40%,#1a0a0a 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      font-family:'Lato',sans-serif; position:relative; overflow:hidden;
     }
 
-    .petals-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    /* ── petals ── */
+    .petals-bg { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
     .petal {
-      position: absolute;
-      background: radial-gradient(ellipse, #e8507a, #c0304d);
-      border-radius: 50% 50% 50% 0; opacity: 0.3;
-      animation: fall linear infinite;
+      position:absolute;
+      background:radial-gradient(ellipse,#e8507a,#c0304d);
+      border-radius:50% 50% 50% 0; opacity:.3;
+      animation:fall linear infinite;
     }
     @keyframes fall {
-      0%   { transform: translateY(-20px) rotate(0deg); opacity: 0; }
-      10%  { opacity: 0.3; } 90% { opacity: 0.15; }
-      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+      0%   { transform:translateY(-20px) rotate(0deg); opacity:0; }
+      10%  { opacity:.3; } 90% { opacity:.15; }
+      100% { transform:translateY(110vh) rotate(360deg); opacity:0; }
     }
 
+    /* ── photo ── */
     .photo-frame {
-      width: 140px; height: 140px; border-radius: 50%;
-      border: 3px solid #e8507a;
-      box-shadow: 0 0 0 8px rgba(232,80,122,0.18), 0 8px 40px rgba(0,0,0,0.5);
-      overflow: hidden; margin-bottom: 1.3rem; background: #2d0f1e;
+      width:140px; height:140px; border-radius:50%;
+      border:3px solid #e8507a;
+      box-shadow:0 0 0 8px rgba(232,80,122,.18),0 8px 40px rgba(0,0,0,.5);
+      overflow:hidden; margin-bottom:1.3rem; background:#2d0f1e;
     }
     .photo-placeholder {
-      width: 100%; height: 100%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: #e8507a; gap: 6px;
+      width:100%; height:100%;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      color:#e8507a; gap:6px;
     }
-    .photo-placeholder span { font-size: 11px; color: #c07090; text-align: center; line-height: 1.4; padding: 0 8px; }
+    .photo-placeholder span { font-size:11px; color:#c07090; text-align:center; line-height:1.4; padding:0 8px; }
 
-    .hearts-row { display: flex; gap: 12px; margin-bottom: 1rem; }
-    .heart-icon { color: #e8507a; font-size: 20px; animation: heartbeat 1.4s ease-in-out infinite; }
-    .heart-icon:nth-child(2) { animation-delay: 0.2s; }
-    .heart-icon:nth-child(3) { animation-delay: 0.4s; }
+    /* ── hearts ── */
+    .hearts-row { display:flex; gap:12px; margin-bottom:1rem; }
+    .heart-icon { color:#e8507a; font-size:20px; animation:heartbeat 1.4s ease-in-out infinite; }
+    .heart-icon:nth-child(2) { animation-delay:.2s; }
+    .heart-icon:nth-child(3) { animation-delay:.4s; }
     @keyframes heartbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.28)} }
 
-    .eyebrow { font-weight: 300; font-size: 11px; letter-spacing: 5px; color: #c07090; text-transform: uppercase; margin-bottom: 0.6rem; }
-    .main-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem,7vw,3.2rem); font-weight: 700; color: #fff; text-align: center; line-height: 1.15; margin-bottom: 0.4rem; }
-    .main-title em { font-style: italic; color: #f09ab0; }
-    .subtitle { font-size: 15px; color: #c07090; font-weight: 300; letter-spacing: 0.5px; margin-bottom: 2.2rem; text-align: center; }
+    /* ── text ── */
+    .eyebrow { font-weight:300; font-size:11px; letter-spacing:5px; color:#c07090; text-transform:uppercase; margin-bottom:.6rem; }
+    .main-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,7vw,3.2rem); font-weight:700; color:#fff; text-align:center; line-height:1.15; margin-bottom:.4rem; }
+    .main-title em { font-style:italic; color:#f09ab0; }
+    .subtitle { font-size:15px; color:#c07090; font-weight:300; letter-spacing:.5px; margin-bottom:2.2rem; text-align:center; }
 
-    #btn-row {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 16px;
-      position: relative;
-      z-index: 10;
-    }
+    /* ── buttons ── */
+    #btn-row { display:flex; flex-direction:row; align-items:center; gap:16px; position:relative; z-index:10; }
 
     #btn-yes {
-      padding: 16px 48px;
-      background: linear-gradient(135deg, #e8507a, #c0304d);
-      color: #fff; border: none; border-radius: 50px;
-      font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700;
-      cursor: pointer; box-shadow: 0 4px 28px rgba(232,80,122,0.5);
-      flex-shrink: 0;
+      padding:16px 48px;
+      background:linear-gradient(135deg,#e8507a,#c0304d);
+      color:#fff; border:none; border-radius:50px;
+      font-family:'Playfair Display',serif; font-size:20px; font-weight:700;
+      cursor:pointer; box-shadow:0 4px 28px rgba(232,80,122,.5);
+      flex-shrink:0;
     }
-    #btn-yes:active { transform: scale(0.97); }
+    #btn-yes:active { transform:scale(.97); }
 
-    /* No button — always visible, starts inline then goes absolute */
     #btn-no {
-      padding: 14px 32px;
-      background: transparent;
-      color: #c07090;
-      border: 1.5px solid #7a3050;
-      border-radius: 50px;
-      font-family: 'Lato', sans-serif; font-size: 16px;
-      cursor: pointer; white-space: nowrap;
-      flex-shrink: 0;
-      display: block;
-      visibility: visible;
-      opacity: 1;
+      padding:14px 32px;
+      background:transparent; color:#c07090;
+      border:1.5px solid #7a3050; border-radius:50px;
+      font-family:'Lato',sans-serif; font-size:16px;
+      cursor:pointer; white-space:nowrap;
+      flex-shrink:0;
     }
-
-    /* After JS takes over */
     #btn-no.floating {
-      position: fixed;
-      z-index: 9999;
-      touch-action: none;
-      user-select: none;
+      position:fixed; z-index:9999;
+      touch-action:none; user-select:none;
     }
 
-    .yes-screen {
-      display: none; flex-direction: column;
-      align-items: center; text-align: center; gap: 1.2rem;
-      position: relative; z-index: 2;
+    /* ── tracker badge ── */
+    #tracker {
+      position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+      background:rgba(232,80,122,.12); border:1px solid rgba(232,80,122,.25);
+      border-radius:50px; padding:6px 18px;
+      font-size:12px; color:#c07090; letter-spacing:.5px;
+      z-index:9998; pointer-events:none;
+      transition:opacity .4s;
     }
-    .yes-screen.visible { display: flex; }
-    .yes-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem,7vw,3rem); font-weight: 700; color: #fff; }
-    .yes-sub { color: #f09ab0; font-size: 16px; font-weight: 300; max-width: 300px; line-height: 1.9; }
 
-    #canvas-fw { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+    /* ── yes screen ── */
+    .yes-screen { display:none; flex-direction:column; align-items:center; text-align:center; gap:1.2rem; position:relative; z-index:2; }
+    .yes-screen.visible { display:flex; }
+    .yes-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,7vw,3rem); font-weight:700; color:#fff; }
+    .yes-sub { color:#f09ab0; font-size:16px; font-weight:300; max-width:300px; line-height:1.9; }
+
+    /* ── email status ── */
+    #email-status {
+      font-size:12px; color:#c07090; margin-top:.5rem;
+      min-height:18px; letter-spacing:.3px;
+    }
+
+    #canvas-fw { position:absolute; inset:0; pointer-events:none; z-index:1; }
   </style>
 </head>
 <body>
@@ -116,17 +143,14 @@
 
   <div id="main-content" style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:2;">
     <div class="photo-frame">
-      <!-- To add your photo, replace the div below with:
-           <img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover;"> -->
-<!--      <div class="photo-placeholder">-->
-<!--        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">-->
-<!--          <circle cx="24" cy="18" r="10" stroke="#e8507a" stroke-width="2"/>-->
-<!--          <path d="M4 44c0-11 8.954-20 20-20s20 9 20 20" stroke="#e8507a" stroke-width="2" stroke-linecap="round"/>-->
-<!--        </svg>-->
-<!--        <span>Your photo here</span>-->
-<!--      </div>-->
-
-        <img src="https://github.com/poghosyannn-rpr/merry-me/blob/main/we.jpg?raw=true" style="width:100%;height:100%;object-fit:cover;">
+      <!-- Replace this block with: <img src="your-photo.jpg" style="width:100%;height:100%;object-fit:cover;"> -->
+      <div class="photo-placeholder">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="18" r="10" stroke="#e8507a" stroke-width="2"/>
+          <path d="M4 44c0-11 8.954-20 20-20s20 9 20 20" stroke="#e8507a" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Your photo here</span>
+      </div>
     </div>
 
     <div class="hearts-row">
@@ -141,7 +165,7 @@
 
     <div id="btn-row">
       <button id="btn-yes" onclick="onYes()">Yes! 💍</button>
-      <button id="btn-no">No</button>
+      <button id="btn-no" id="btn-no">No</button>
     </div>
   </div>
 
@@ -149,13 +173,30 @@
     <div style="font-size:4rem;animation:heartbeat 0.8s ease-in-out infinite;">💍</div>
     <div class="yes-title">She said Yes! 🎉</div>
     <p class="yes-sub">You said yes, Mery!<br>♥ This moment is forever. ♥</p>
+    <p id="email-status"></p>
   </div>
 </div>
 
+<!-- action tracker badge -->
+<div id="tracker">No taps: 0 &nbsp;|&nbsp; Yes taps: 0</div>
+
 <script>
 (function(){
-  const root  = document.getElementById('root');
-  const noBtn = document.getElementById('btn-no');
+  const root   = document.getElementById('root');
+  const noBtn  = document.getElementById('btn-no');
+  const btnRow = document.getElementById('btn-row');
+  const tracker = document.getElementById('tracker');
+
+  /* ── action log ── */
+  const log = { no: 0, yes: 0, events: [] };
+
+  function recordAction(action){
+    const ts = new Date().toLocaleString();
+    log.events.push({ action, time: ts });
+    if(action === 'no') log.no++;
+    if(action === 'yes') log.yes++;
+    tracker.textContent = 'No taps: ' + log.no + '  |  Yes taps: ' + log.yes;
+  }
 
   /* ── petals ── */
   for(let i=0;i<28;i++){
@@ -169,150 +210,144 @@
     document.getElementById('petals').appendChild(p);
   }
 
-  /* ── state ── */
+  /* ── No button state ── */
   let homeX=0, homeY=0, curX=0, curY=0;
   let BW=0, BH=0;
   let fleeCount=0, returning=false, returnTimer=null;
-  const PAD = 16;
-  const MAX_FLEE = 5;
+  const PAD=16, MAX_FLEE=5;
 
-  /* ── init after layout ── */
   function init(){
     const nr = noBtn.getBoundingClientRect();
     BW = noBtn.offsetWidth;
     BH = noBtn.offsetHeight;
-
-    /* home = screen coords of the button right now */
     homeX = nr.left;
     homeY = nr.top;
     curX  = homeX;
     curY  = homeY;
 
-    /* switch to fixed positioning at same visual spot */
-    noBtn.classList.add('floating');
-    noBtn.style.width  = BW + 'px';
-    noBtn.style.left   = homeX + 'px';
-    noBtn.style.top    = homeY + 'px';
-    noBtn.style.transition = 'none';
+    /* ghost so Yes stays put */
+    const g=document.createElement('div');
+    g.style.cssText='width:'+BW+'px;height:'+BH+'px;flex-shrink:0;pointer-events:none;';
+    btnRow.appendChild(g);
 
-    /* leave a same-size ghost in the row so Yes stays put */
-    const ghost = document.createElement('div');
-    ghost.style.cssText = 'width:'+BW+'px;height:'+BH+'px;flex-shrink:0;pointer-events:none;';
-    document.getElementById('btn-row').appendChild(ghost);
+    noBtn.classList.add('floating');
+    noBtn.style.width = BW+'px';
+    noBtn.style.left  = homeX+'px';
+    noBtn.style.top   = homeY+'px';
+    noBtn.style.transition='none';
   }
 
-  /* slight delay so fonts/layout settle */
-  setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(init)), 120);
+  setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(init)), 150);
 
-  /* ── pick a random position fully inside viewport ── */
+  /* ── random position inside viewport ── */
   function randomSpot(){
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const maxX = vw - BW - PAD;
-    const maxY = vh - BH - PAD;
-
-    const zones = [
-      {x: PAD + Math.random()*(maxX*0.38),        y: PAD + Math.random()*(maxY*0.28)},
-      {x: maxX*0.31+Math.random()*(maxX*0.38),    y: PAD + Math.random()*(maxY*0.28)},
-      {x: maxX*0.62+Math.random()*(maxX*0.38),    y: PAD + Math.random()*(maxY*0.28)},
-      {x: PAD + Math.random()*(maxX*0.22),         y: maxY*0.28+Math.random()*(maxY*0.44)},
-      {x: maxX*0.78+Math.random()*(maxX*0.22),    y: maxY*0.28+Math.random()*(maxY*0.44)},
-      {x: PAD + Math.random()*(maxX*0.38),         y: maxY*0.72+Math.random()*(maxY*0.28)},
-      {x: maxX*0.31+Math.random()*(maxX*0.38),    y: maxY*0.72+Math.random()*(maxY*0.28)},
-      {x: maxX*0.62+Math.random()*(maxX*0.38),    y: maxY*0.72+Math.random()*(maxY*0.28)},
+    const vw=window.innerWidth, vh=window.innerHeight;
+    const maxX=vw-BW-PAD, maxY=vh-BH-PAD;
+    const zones=[
+      {x:PAD+Math.random()*(maxX*.38),       y:PAD+Math.random()*(maxY*.25)},
+      {x:maxX*.31+Math.random()*(maxX*.38),  y:PAD+Math.random()*(maxY*.25)},
+      {x:maxX*.62+Math.random()*(maxX*.38),  y:PAD+Math.random()*(maxY*.25)},
+      {x:PAD+Math.random()*(maxX*.2),         y:maxY*.3+Math.random()*(maxY*.4)},
+      {x:maxX*.8+Math.random()*(maxX*.2),    y:maxY*.3+Math.random()*(maxY*.4)},
+      {x:PAD+Math.random()*(maxX*.38),        y:maxY*.72+Math.random()*(maxY*.28)},
+      {x:maxX*.31+Math.random()*(maxX*.38),  y:maxY*.72+Math.random()*(maxY*.28)},
+      {x:maxX*.62+Math.random()*(maxX*.38),  y:maxY*.72+Math.random()*(maxY*.28)},
     ];
-
-    /* pick zone farthest from current position */
-    let best=zones[0], bestD=0;
+    let best=zones[0],bestD=0;
     zones.forEach(z=>{
-      const d=Math.hypot(z.x-curX, z.y-curY);
+      const d=Math.hypot(z.x-curX,z.y-curY);
       if(d>bestD){bestD=d;best=z;}
     });
-
     return {
-      x: Math.max(PAD, Math.min(maxX, best.x)),
-      y: Math.max(PAD, Math.min(maxY, best.y))
+      x:Math.max(PAD,Math.min(maxX,best.x)),
+      y:Math.max(PAD,Math.min(maxY,best.y))
     };
   }
 
-  /* ── flee to random spot ── */
+  /* ── flee ── */
   function flee(){
     if(returning) return;
-    const spot = randomSpot();
-    curX = spot.x; curY = spot.y;
-
-    noBtn.style.transition = 'left 0.38s cubic-bezier(.22,.68,0,1.1), top 0.38s cubic-bezier(.22,.68,0,1.1)';
-    noBtn.style.left = curX + 'px';
-    noBtn.style.top  = curY + 'px';
-
+    recordAction('no');
+    const s=randomSpot();
+    curX=s.x; curY=s.y;
+    noBtn.style.transition='left .35s cubic-bezier(.22,.68,0,1.1),top .35s cubic-bezier(.22,.68,0,1.1)';
+    noBtn.style.left=curX+'px';
+    noBtn.style.top=curY+'px';
     fleeCount++;
     clearTimeout(returnTimer);
-    if(fleeCount >= MAX_FLEE){
-      returnTimer = setTimeout(goHome, 1200);
-    }
+    if(fleeCount>=MAX_FLEE) returnTimer=setTimeout(goHome,1200);
   }
 
-  /* ── spring back home ── */
   function goHome(){
-    returning = true;
-    /* re-read home in case of resize/scroll */
-    noBtn.style.transition = 'left 0.7s cubic-bezier(.34,1.56,.64,1), top 0.7s cubic-bezier(.34,1.56,.64,1)';
-    noBtn.style.left = homeX + 'px';
-    noBtn.style.top  = homeY + 'px';
-    curX = homeX; curY = homeY;
-    fleeCount = 0;
-    setTimeout(()=>{ returning=false; }, 800);
+    returning=true;
+    noBtn.style.transition='left .7s cubic-bezier(.34,1.56,.64,1),top .7s cubic-bezier(.34,1.56,.64,1)';
+    noBtn.style.left=homeX+'px';
+    noBtn.style.top=homeY+'px';
+    curX=homeX; curY=homeY; fleeCount=0;
+    setTimeout(()=>{returning=false;},800);
   }
 
-  /* ── touch (mobile) ── */
-  noBtn.addEventListener('touchstart', function(e){
-    e.preventDefault();
-    flee();
-  }, {passive:false});
-
-  noBtn.addEventListener('touchend', function(e){
-    e.preventDefault();
-  }, {passive:false});
-
-  /* ── click (desktop / webview) ── */
+  noBtn.addEventListener('touchstart',function(e){e.preventDefault();flee();},{passive:false});
+  noBtn.addEventListener('touchend',  function(e){e.preventDefault();},{passive:false});
   noBtn.addEventListener('click', flee);
 
   /* ── Yes ── */
   window.onYes = function(){
+    recordAction('yes');
     clearTimeout(returnTimer);
-    noBtn.style.display = 'none';
-    document.getElementById('main-content').style.display = 'none';
+    noBtn.style.display='none';
+    tracker.style.opacity='0';
+    document.getElementById('main-content').style.display='none';
     document.getElementById('yes-screen').classList.add('visible');
     startFireworks();
+    sendEmail();
   };
 
-  /* ── fireworks ── */
+  /* ── Send email via EmailJS ── */
+  function sendEmail(){
+    const statusEl = document.getElementById('email-status');
+    if(EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY'){
+      // EmailJS not configured — skip silently
+      return;
+    }
+    const now = new Date();
+    const params = {
+      to_email : MY_EMAIL,
+      date     : now.toLocaleDateString(),
+      time     : now.toLocaleTimeString(),
+      clicks   : 'No button tapped ' + log.no + ' time(s) before she said Yes',
+      events   : log.events.map(e=>e.action.toUpperCase()+' at '+e.time).join('\n'),
+    };
+    statusEl.textContent = 'Sending notification… 💌';
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      .then(()=>{ statusEl.textContent = '✓ Notification sent to ' + MY_EMAIL; })
+      .catch(err=>{ statusEl.textContent = '(Email send failed: '+err.text+')'; console.error(err); });
+  }
+
+  /* ── Fireworks ── */
   function startFireworks(){
-    const canvas = document.getElementById('canvas-fw');
-    canvas.width  = root.offsetWidth;
-    canvas.height = root.offsetHeight;
-    const ctx = canvas.getContext('2d');
+    const canvas=document.getElementById('canvas-fw');
+    canvas.width=root.offsetWidth; canvas.height=root.offsetHeight;
+    const ctx=canvas.getContext('2d');
     const pts=[]; let n=0;
     const colors=['#ff6b9d','#ffb347','#fff','#ff4569','#f9ca24','#f0e6ff','#ff80b5','#ffd6e7'];
-
     function burst(x,y){
       for(let i=0;i<80;i++){
-        const a=(Math.PI*2/80)*i+Math.random()*0.2, s=2+Math.random()*6;
+        const a=(Math.PI*2/80)*i+Math.random()*.2,s=2+Math.random()*6;
         pts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,alpha:1,
-          col:colors[Math.floor(Math.random()*colors.length)],
-          r:1.5+Math.random()*3.5, d:0.009+Math.random()*0.011});
+          col:colors[Math.floor(Math.random()*colors.length)],r:1.5+Math.random()*3.5,d:.009+Math.random()*.011});
       }
     }
     function launch(){
-      burst(60+Math.random()*(canvas.width-120), 40+Math.random()*(canvas.height*0.65));
-      n++; if(n<20) setTimeout(launch, 200+Math.random()*280);
+      burst(60+Math.random()*(canvas.width-120),40+Math.random()*(canvas.height*.65));
+      n++; if(n<20) setTimeout(launch,200+Math.random()*280);
     }
     launch();
     function draw(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
       for(let i=pts.length-1;i>=0;i--){
         const p=pts[i];
-        p.x+=p.vx; p.y+=p.vy; p.vy+=0.07; p.alpha-=p.d;
+        p.x+=p.vx; p.y+=p.vy; p.vy+=.07; p.alpha-=p.d;
         if(p.alpha<=0){pts.splice(i,1);continue;}
         ctx.globalAlpha=p.alpha; ctx.fillStyle=p.col;
         ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
